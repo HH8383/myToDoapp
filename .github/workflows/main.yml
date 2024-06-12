@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and deploy frontend
+        working-directory: frontend
+        run:  |
+          npm install
+          npm run build
+
+      - name: Build backend
+        working-directory: backend
+        run:
+          go build -o main .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build Docker images
+        run: |
+          docker build -t hh8383/frontend:latest frontend
+          docker build -t hh8383/backernd:latest backend
+
+      - name: Push Docker images
+          docker build -t hh8383/frontend:latest frontend
+          docker build -t hh8383/backernd:latest backend
+
+      - name: SSH into server and redeploy containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SERVER_IP}}
+          username: ${{secrets.SERVER_USERNAME}}
+          password: ${{secrets.SERVER_PASSWORD}}
+          scripts: |
+              docker-compose -f ./docker-compose.yml pull
+              docker-compose -f ./docker-compose.yml up -d
+            
+
+
+
+
+
+          

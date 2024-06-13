@@ -36,29 +36,29 @@ jobs:
           push: true
           tags: todoappcont.azurecr.io/todoapp-frontend:latest
       
-      deploy:
-        runs-on: ubutu-latest
-        needs: build_and_push
+    deploy:
+      runs-on: ubutu-latest
+      needs: build_and_push
 
-        steps:
-        - name: Checkout code
-          uses: actions/chekout@v2
+      steps:
+      - name: Checkout code
+        uses: actions/chekout@v2
 
-        - name: Azure CLI login
-          uses: azure/login@v1
-          with:
-            creds: ${{secrets.AZURE_CREDENTIALS}}
+      - name: Azure CLI login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
 
-        - name: Deploy backend to Azure Container Apps
-          run : |
-        az containerapp update \
+      - name: Deploy backend to Azure Container Apps
+        run: |
+          az containerapp update \
           --name backend-app \
           --resource-group ToDoAppContainer \
           --image todoappcont.azurecr.io/todoapp-backend:latest
 
-    - name: Deploy frontend to Azure Container Apps
-      run: |
-        az containerapp update \
+      - name: Deploy frontend to Azure Container Apps
+        run: |
+          az containerapp update \
           --name frontend-app \
           --resource-group ToDoAppContainer \
           --image todoappcont.azurecr.io/todoapp-frontend:latest

@@ -37,7 +37,7 @@ jobs:
           tags: todoappcont.azurecr.io/todoapp-frontend:latest
       
     deploy:
-      runs-on: ubutu-latest
+      runs-on: ubuntu-latest
       needs: build_and_push
 
       steps:

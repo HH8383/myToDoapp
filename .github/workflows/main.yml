@@ -41,8 +41,8 @@ jobs:
     needs: build-and-deploy
 
     steps:
-    - name: Checkout code
-      uses: actions/chekout@v2
+    # - name: Checkout code
+    #   uses: actions/chekout@v2
 
     - name: Azure CLI login
       uses: azure/login@v1
